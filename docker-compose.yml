@@ -1,0 +1,23 @@
+version : '3'
+services:
+  db:
+    image: "mysql:5.6"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todo
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    container_name: todo_db
+    ports:
+      - "3307:3306"
+    tty: true
+  app:
+    image: "golang:lastest"
+    volumes:
+      - "./:/docker-todo-app"
+    container_name: todo_app
+    ports:
+      - "8080:8080"
+    tty: true
+    depends_on:
+      - db
