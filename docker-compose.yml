@@ -4,15 +4,17 @@ services:
     image: "mysql:5.6"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: todo
+      MYSQL_DATABASE: sandbox
       MYSQL_USER: docker
       MYSQL_PASSWORD: docker
-    container_name: todo_db
+    container_name: sandbox_db
+    volumes:
+      - ./scripts/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3307:3306"
     tty: true
   app:
-    image: "golang:lastest"
+    image: "golang:latest"
     volumes:
       - "./:/docker-todo-app"
     container_name: todo_app
