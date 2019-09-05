@@ -2,7 +2,6 @@ package v1
 
 import (
 	"context"
-	"fmt"
 	"time"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
@@ -11,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/ngray/sandbox/pkg/api/v1"
+	"github.com/ngray1747/sandbox/pkg/api/v1"
 )
 
 const (
@@ -24,7 +23,7 @@ type toDoServiceServer struct {
 }
 
 // Create a new todoserviceserver 
-func NewToDoServiceServer(db *sql.DB) v1.toDoServiceServer {
+func NewToDoServiceServer(db *sql.DB) v1.TodoServiceServer {
 	return &toDoServiceServer{db: db}
 }
 
