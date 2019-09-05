@@ -23,7 +23,7 @@ type toDoServiceServer struct {
 }
 
 // Create a new todoserviceserver 
-func NewToDoServiceServer(db *sql.DB) v1.TodoServiceServer {
+func NewTodoServiceServer(db *sql.DB) v1.TodoServiceServer {
 	return &toDoServiceServer{db: db}
 }
 
@@ -89,6 +89,7 @@ func (s *toDoServiceServer) Create(ctx context.Context, request *v1.CreateReques
 		Id: ID,
 	}, nil
 }
+
 // Read todo task
 func (s *toDoServiceServer) Read(ctx context.Context, request *v1.ReadRequest) (*v1.ReadResponse, error) {
 	
