@@ -73,7 +73,7 @@ func (s *toDoServiceServer) Create(ctx context.Context, request *v1.CreateReques
 
 
 	//Insert into database
-	response, error := connection.ExecContext(ctx, "INSERT INTO todo (`title`, `description`, `reminder`) VALUES (?, ?, ?) ", request.todo.title, request.todo.description, reminder)
+	response, error := connection.ExecContext(ctx, "INSERT INTO todo (`title`, `description`, `reminder`) VALUES (?, ?, ?) ", request.Todo.Title, request.Todo.Description, reminder)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Failed to insert into database, error: " + error.Error())
 	}
@@ -85,8 +85,8 @@ func (s *toDoServiceServer) Create(ctx context.Context, request *v1.CreateReques
 	}
 
 	return &v1.CreateResponse{
-		API: apiVersion,
-		id: ID,
+		Api: apiVersion,
+		Id: ID,
 	}, nil
 }
 // Read todo task
@@ -104,7 +104,7 @@ func (s *toDoServiceServer) Read(ctx context.Context, request *v1.ReadRequest) (
 	defer connection.Close()
 
 	// Get the requested to from database
-	rows, error := connection.QueryContext(ctx, "SELECT `id`, `title`, `description` , `reminder` FROM `todo` WHERE `id` = ?", request.id)
+	rows, error := connection.QueryContext(ctx, "SELECT `id`, `title`, `description` , `reminder` FROM `todo` WHERE `id` = ?", request.Id)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Failed to get the selected todo, error: " + error.Error())
 	}
@@ -115,7 +115,7 @@ func (s *toDoServiceServer) Read(ctx context.Context, request *v1.ReadRequest) (
 		if error := rows.Err(); error != nil {
 			return nil, status.Errorf(codes.Unknown, "Failed to retrieve data from row, error: " + error.Error())
 		}
-		return nil, status.Error(codes.NotFound, "The requested todo id ('%d') is not found!", request.id)
+		return nil, status.Errorf(codes.NotFound, "The requested todo id ('%d') is not found!", request.Id)
 	}
 
 	// Map Todo data
@@ -126,18 +126,18 @@ func (s *toDoServiceServer) Read(ctx context.Context, request *v1.ReadRequest) (
 		return nil, status.Errorf(codes.Unknown, "Failed to map todo with retrieved data, error: " + error.Error())
 	}
 
-	todo.reminder, error = ptypes.TimestampProto(reminder)
+	todo.Reminder, error = ptypes.TimestampProto(reminder)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Reminder has invalid format, error: " + error.Error())
 	}
 
 	if rows.Next() {
-		return nil, status.Errorf(codes.Unknown, "Found more multiple data with request id = '%d'", request.id )
+		return nil, status.Errorf(codes.Unknown, "Found more multiple data with request id = '%d'", request.Id )
 	}
 
 	return &v1.ReadResponse {
-		api: apiVersion,
-		todo: &todo, //? WTF !?
+		Api: apiVersion,
+		Todo: &todo, //? WTF !?
 	}, nil
 }
 
@@ -156,12 +156,12 @@ func (s *toDoServiceServer) Update(ctx context.Context, request *v1.UpdateReques
 
 	defer connection.Close()
 
-	reminder, error := ptypes.Timestamp(request.Todo.reminder)
+	reminder, error := ptypes.Timestamp(request.Todo.Reminder)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Reminder field has invalid format, error: " + error.Error())
 	}
 
-	response, error := connection.ExecContext(ctx, "UPDATE `todo` SET `title` = ?, `description` = ?, `reminder` = ? WHERE `id` = ?", request.todo.title, request.todo.description, reminder, request.todo.id)
+	response, error := connection.ExecContext(ctx, "UPDATE `todo` SET `title` = ?, `description` = ?, `reminder` = ? WHERE `id` = ?", request.Todo.Title, request.Todo.Description, reminder, request.Todo.Id)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Failed to update todo, error: " + error.Error())
 	}
@@ -172,12 +172,12 @@ func (s *toDoServiceServer) Update(ctx context.Context, request *v1.UpdateReques
 	}
 
 	if rows == 0 {
-		return nil, status.Errorf(codes.Unknown, "Requested ID ('%d') not found", request.Todo.id)
+		return nil, status.Errorf(codes.Unknown, "Requested ID ('%d') not found", request.Todo.Id)
 	}
 
 	return &v1.UpdateResponse {
-		api: apiVersion,
-		updated: rows,
+		Api: apiVersion,
+		Updated: rows,
 	}, nil
 }
 
@@ -211,8 +211,8 @@ func (s *toDoServiceServer) Delete(ctx context.Context, request *v1.DeleteReques
 	}
 
 	return &v1.DeleteResponse {
-		api: apiVersion,
-		deleted: rows,
+		Api: apiVersion,
+		Deleted: rows,
 	}, nil
 }
 
@@ -239,16 +239,16 @@ func (s *toDoServiceServer) ReadAll(ctx context.Context, request *v1.ReadAllRequ
 	defer rows.Close()
 
 	var reminder time.Time
-	listTodo := []v1.Todo{}
+	listTodo := []*v1.Todo{}
 	
 	for rows.Next() {
 		todo := new(v1.Todo)
 
-		if error := rows.Scan(&todo.Id, &todo.Title, &todo.Desciption, &reminder); error != nil {
+		if error := rows.Scan(&todo.Id, &todo.Title, &todo.Description, &reminder); error != nil {
 			return nil, status.Errorf(codes.Unknown, "Failed mapping data, error: " + error.Error())
 		}
 
-		todo.reminder, error = ptypes.TimestampProto(reminder)
+		todo.Reminder, error = ptypes.TimestampProto(reminder)
 		if error != nil {
 			return nil, status.Errorf(codes.Unknown, "Reminder field has invalid format, error: " + error.Error())
 		}
@@ -258,7 +258,7 @@ func (s *toDoServiceServer) ReadAll(ctx context.Context, request *v1.ReadAllRequ
 	}
 
 	return &v1.ReadAllResponse {
-		api: apiVersion,
-		todo: listTodo,
+		Api: apiVersion,
+		Todo: listTodo,
 	}, nil
 }
