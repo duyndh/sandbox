@@ -10,10 +10,10 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/ngray/sandbox/pkg/api/v1"
+	"github.com/ngray1747/sandbox/pkg/api/v1"
 )
 
-func RunServer(ctx context.Context, v1API v1.ToDoServiceServer, port string) error {
+func RunServer(ctx context.Context, v1API v1.TodoServiceServer, port string) error {
 	listen, error := net.Listen("tcp", ":"+port)
 	if error != nil {
 		return error
