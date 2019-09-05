@@ -9,7 +9,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"gopkg.in/DATA-DOG/go-sqlmock.v1"
+	"github.com/DATA-DOG/go-sqlmock"
 
 	"github.com/ngray1747/sandbox/pkg/api/v1"
 )
@@ -590,7 +590,7 @@ func Test_TodoServiceServer_ReadAll(t *testing.T) {
 			},
 			want: &v1.ReadAllResponse{
 				Api: "v1",
-				Todos: []*v1.Todo{
+				Todo: []*v1.Todo{
 					{
 						Id:          1,
 						Title:       "title 1",
@@ -621,7 +621,7 @@ func Test_TodoServiceServer_ReadAll(t *testing.T) {
 			},
 			want: &v1.ReadAllResponse{
 				Api:   "v1",
-				Todos: []*v1.Todo{},
+				Todo: []*v1.Todo{},
 			},
 		},
 		{
