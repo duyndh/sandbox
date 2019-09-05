@@ -16,7 +16,7 @@ services:
   app:
     image: "golang:latest"
     volumes:
-      - "./:/docker-todo-app"
+      - "./:/sandbox"
     container_name: todo_app
     ports:
       - "8080:8080"
