@@ -1,0 +1,343 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "todo-service.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/todo": {
+      "post": {
+        "summary": "Create Todo",
+        "operationId": "Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TodoService"
+        ]
+      }
+    },
+    "/v1/todo/all": {
+      "get": {
+        "summary": "Read all Todo tasks",
+        "operationId": "ReadAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ReadAllResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Api",
+            "description": "Api versioning.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TodoService"
+        ]
+      }
+    },
+    "/v1/todo/{id}": {
+      "get": {
+        "summary": "Read Todo",
+        "operationId": "Read",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ReadResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The task id to read",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "Api",
+            "description": "Api versioning.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TodoService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Todo",
+        "operationId": "Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Entity Id to delete",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "Api",
+            "description": "Api versioning.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TodoService"
+        ]
+      }
+    },
+    "/v1/todo/{todo.id}": {
+      "put": {
+        "summary": "Update Todo",
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "todo.id",
+            "description": "Unique interger identify Todo task.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TodoService"
+        ]
+      },
+      "patch": {
+        "summary": "Update Todo",
+        "operationId": "Update2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "todo.id",
+            "description": "Unique interger identify Todo task.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TodoService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "v1CreateRequest": {
+      "type": "object",
+      "properties": {
+        "Api": {
+          "type": "string",
+          "title": "Api versioning"
+        },
+        "todo": {
+          "$ref": "#/definitions/v1Todo",
+          "title": "Task entity to add"
+        }
+      }
+    },
+    "v1CreateResponse": {
+      "type": "object",
+      "properties": {
+        "Api": {
+          "type": "string",
+          "title": "Api versioning"
+        },
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "title": "Created task id"
+        }
+      }
+    },
+    "v1DeleteResponse": {
+      "type": "object",
+      "properties": {
+        "Api": {
+          "type": "string",
+          "title": "Api versioning"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "int64",
+          "title": "Status return whether the entity is deleted"
+        }
+      }
+    },
+    "v1ReadAllResponse": {
+      "type": "object",
+      "properties": {
+        "Api": {
+          "type": "string",
+          "title": "Api versioning"
+        },
+        "todo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Todo"
+          },
+          "title": "Return all the task"
+        }
+      }
+    },
+    "v1ReadResponse": {
+      "type": "object",
+      "properties": {
+        "Api": {
+          "type": "string",
+          "title": "Api versioning"
+        },
+        "todo": {
+          "$ref": "#/definitions/v1Todo",
+          "title": "Return Task entity"
+        }
+      }
+    },
+    "v1Todo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "Unique interger identify Todo task."
+        },
+        "title": {
+          "type": "string",
+          "title": "Title of the task"
+        },
+        "description": {
+          "type": "string",
+          "title": "Task description"
+        },
+        "done": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Check whether task is done yet."
+        },
+        "reminder": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Date and time to remind the task"
+        },
+        "creted_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Task created date and time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Task updated date and time"
+        }
+      }
+    },
+    "v1UpdateRequest": {
+      "type": "object",
+      "properties": {
+        "Api": {
+          "type": "string",
+          "title": "Api versioning"
+        },
+        "todo": {
+          "$ref": "#/definitions/v1Todo",
+          "title": "Task entity to update"
+        }
+      }
+    },
+    "v1UpdateResponse": {
+      "type": "object",
+      "properties": {
+        "Api": {
+          "type": "string",
+          "title": "Api versioning"
+        },
+        "updated": {
+          "type": "string",
+          "format": "int64",
+          "title": "Return the number of entity updated"
+        }
+      }
+    }
+  }
+}
