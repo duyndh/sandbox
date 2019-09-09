@@ -3,6 +3,7 @@ syntax = "proto3";
 package v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 message Todo {
     // Unique interger identify Todo task.    
@@ -28,77 +29,77 @@ message Todo {
 }
 
 message CreateRequest {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
 
     // Task entity to add
     Todo todo = 2;
 }
 
 message CreateResponse {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
 
     // Created task id
     int64 id = 2;
 }
 
 message ReadRequest {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
 
     // The task id to read
     int64 id = 2;
 }
 
 message ReadResponse {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
     
     // Return Task entity
     Todo todo = 2;
 }
 
 message UpdateRequest {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
     
     // Task entity to update
     Todo todo = 2;
 }
 
 message UpdateResponse {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
 
     // Return the number of entity updated
     int64 updated = 2;
 }
 
 message DeleteRequest {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
 
     // Entity Id to delete
     int64 id = 2;
 }
 
 message DeleteResponse {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
     
     // Status return whether the entity is deleted
     int64 deleted = 2;
 }
 
 message ReadAllRequest {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
 }
 
 message ReadAllResponse {
-    // API versioning
-    string API = 1;
+    // Api versioning
+    string Api = 1;
 
     // Return all the task
     repeated Todo todo = 2;
@@ -106,17 +107,44 @@ message ReadAllResponse {
 
 service TodoService {
     // Create Todo
-    rpc Create (CreateRequest) returns (CreateResponse);
+    rpc Create (CreateRequest) returns (CreateResponse) {
+        option (google.api.http)  = {
+            post: "/v1/todo"
+            body: "*"
+        };
+    }
 
     // Read Todo
-    rpc Read (ReadRequest) returns (ReadResponse);
+    rpc Read (ReadRequest) returns (ReadResponse) {
+        option (google.api.http) = {
+            get: "/v1/todo/{id}"
+        };
+    }
 
     // Update Todo
-    rpc Update (UpdateRequest) returns (UpdateResponse);
+    rpc Update (UpdateRequest) returns (UpdateResponse) {
+        option (google.api.http) = {
+            put: "/v1/todo/{todo.id}"
+            body: "*"
+
+            additional_bindings {
+                patch: "/v1/todo/{todo.id}"
+                body: "*"
+            }
+        };
+    }
 
     // Delete Todo
-    rpc Delete (DeleteRequest) returns (DeleteResponse);
+    rpc Delete (DeleteRequest) returns (DeleteResponse) {
+        option (google.api.http) = {
+            delete: "/v1/todo/{id}"
+        };
+    }
 
     // Read all Todo tasks
-    rpc ReadAll (ReadAllRequest) returns (ReadAllResponse);
+    rpc ReadAll (ReadAllRequest) returns (ReadAllResponse) {
+        option (google.api.http) = {
+            get: "/v1/todo/all"
+        };
+    }
 }
