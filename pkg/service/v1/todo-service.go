@@ -73,7 +73,7 @@ func (s *toDoServiceServer) Create(ctx context.Context, request *v1.CreateReques
 
 
 	//Insert into database
-	response, error := connection.ExecContext(ctx, "INSERT INTO todo (`title`, `description`, `reminder`) VALUES (?, ?, ?) ", request.Todo.Title, request.Todo.Description, reminder)
+	response, error := connection.ExecContext(ctx, "INSERT INTO `todo` (`title`, `description`, `reminder`, `done`) VALUES (?, ?, ?, ?) ", request.Todo.Title, request.Todo.Description, reminder, false)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Failed to insert into database, error: " + error.Error())
 	}
@@ -105,7 +105,7 @@ func (s *toDoServiceServer) Read(ctx context.Context, request *v1.ReadRequest) (
 	defer connection.Close()
 
 	// Get the requested to from database
-	rows, error := connection.QueryContext(ctx, "SELECT `id`, `title`, `description` , `reminder` FROM `todo` WHERE `id` = ?", request.Id)
+	rows, error := connection.QueryContext(ctx, "SELECT `id`, `title`, `description` , `reminder`, `done` FROM `todo` WHERE `id` = ?", request.Id)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Failed to get the selected todo, error: " + error.Error())
 	}
@@ -162,7 +162,7 @@ func (s *toDoServiceServer) Update(ctx context.Context, request *v1.UpdateReques
 		return nil, status.Errorf(codes.Unknown, "Reminder field has invalid format, error: " + error.Error())
 	}
 
-	response, error := connection.ExecContext(ctx, "UPDATE `todo` SET `title` = ?, `description` = ?, `reminder` = ? WHERE `id` = ?", request.Todo.Title, request.Todo.Description, reminder, request.Todo.Id)
+	response, error := connection.ExecContext(ctx, "UPDATE `todo` SET `title` = ?, `description` = ?, `reminder` = ?, `done` = ? WHERE `id` = ?", request.Todo.Title, request.Todo.Description, reminder, request.Todo.Done, request.Todo.Id)
 	if error != nil {
 		return nil, status.Errorf(codes.Unknown, "Failed to update todo, error: " + error.Error())
 	}
